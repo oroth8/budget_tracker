@@ -33,10 +33,10 @@ app.use(session({
 }))
 
 // Static
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 
 // routes
-app.use('/', require('./routes/api.js'));
+app.use(require('./routes/api.js'));
 
 const PORT = process.env.PORT || 8080
 
