@@ -1,5 +1,4 @@
 let db;
-
 // creates a index database called budget
 const request = window.indexedDB.open("budget", 1);
 
@@ -8,20 +7,16 @@ request.onupgradeneeded = function (event) {
 //   create a new object store called pending with an autoincrmenting key value
   db.createObjectStore("pending", { autoIncrement : true });
 };
-
 request.onsuccess = function (event) {
   db = event.target.result;
-
   if (navigator.onLine) {
     checkDatabase();
   }
 };
-
 request.onerror = function (event) {
   // log error here
   console.log("IndexDb request failed " + event.target.errorCode);
 };
-
 function saveRecord(record) {
   // creates a transaction on the pending store with readwrite access
   const transaction = db.transaction(["pending"], "readwrite");
@@ -30,26 +25,35 @@ function saveRecord(record) {
   // add record to your store with add method.
   store.add(record);
 }
-
 function checkDatabase() {
-  // open a tx on budget db
-  // accesses the pending object store
-  // gets all records from store and set it to a variable
+  // open a transaction on the budget db
+  const transaction = db.transaction(["pending"], "readwrite");
+  // access the pending object store
+  const store = transaction.objectStore("pending");
+  // get all records from store and set to a variable that is auto incrementing
+  const getAll = store.getAll();
 
-  getAll.onsuccess = function () {
+  getAll.onsuccess = function() {
     if (getAll.result.length > 0) {
-      fetch('/api/transaction/bulk', {
-        method: 'POST',
+      fetch("/api/transaction/bulk", {
+        method: "POST",
         body: JSON.stringify(getAll.result),
         headers: {
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json',
-        },
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json"
+        }
       })
-        .then((response) => response.json())
-        .then(() => {
-          // if successful, opens a tx on budget db, accesses the pending store and clears all items in store
-        });
+      .then(response => response.json())
+      .then(() => {
+        // if successful, open a transaction on your budget db
+        const transaction = db.transaction(["pending"], "readwrite");
+
+        // access your pending object store
+        const store = transaction.objectStore("pending");
+
+        // clear all items in your store
+        store.clear();
+      });
     }
   };
 }
