@@ -1,28 +1,51 @@
 const express = require("express");
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 const logger = require("morgan");
-const mongoose = require("mongoose");
 const compression = require("compression");
+const bodyParser = require('body-parser');
+const path = require('path');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session)
 
-const PORT = 3000;
+
+// Load config
+dotenv.config({path: './config/config.env'})
+
+const connectDB = require('./config/db');
+connectDB();
 
 const app = express();
 
 app.use(logger("dev"));
 
+// body Parser
 app.use(compression());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({extended: false}))
+app.use(express.json())
 
-app.use(express.static("public"));
+// express-session middleware
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false,
+    store: new MongoStore({mongooseConnection: mongoose.connection})
+}))
 
-mongoose.connect("mongodb://localhost/budget", {
-  useNewUrlParser: true,
-  useFindAndModify: false
-});
+// Static
+app.use(express.static(path.join(__dirname, 'public')));
 
 // routes
-app.use(require("./routes/api.js"));
+app.use('/', require('./routes/api.js'));
 
-app.listen(PORT, () => {
-  console.log(`App running on port ${PORT}!`);
-});
+const PORT = process.env.PORT || 8080
+
+
+app.listen(PORT, console.log(`Server running on ${PORT}`));
+
+
+
+
+
+
+
