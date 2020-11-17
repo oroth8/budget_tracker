@@ -1,6 +1,6 @@
 
 # Budget Tracker
-![BudgetTrackerScreenShot](public\img\BudgetTracker.png)
+![BudgetTrackerScreenShot](./public/img/BudgetTracker.png)
 
 # Table of Contents
 -[Description](#description)
