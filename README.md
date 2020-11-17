@@ -1,6 +1,6 @@
 
 # Budget Tracker
-![BudgetTrackerScreenShot](public\img\Screenshot_2020-11-16 Budget Tracker.png)
+![BudgetTrackerScreenShot](public\img\BudgetTracker.png)
 
 # Table of Contents
 -[Description](#description)
@@ -48,6 +48,6 @@ Github: oroth8
 ### Email 
 rothowen27@gmail.com
 
-[gitHub_URL](undefined)
-[gitHub_Repo_URL](undefined)
+[gitHub_URL](https://github.com/oroth8)
+[gitHub_Repo_URL](https://github.com/oroth8/budget_tracker)
 
